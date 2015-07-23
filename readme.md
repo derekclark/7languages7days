@@ -148,3 +148,34 @@ irb(main):014:0> a.first
 irb(main):016:0> a[0]
 => 2
 ```
+
+-Print the contents of an array of sixteen numbers, four numbers at a time, using just each. THIS FEELS LIKE A CHEAT.
+
+each implementation
+```ruby
+myStack=[]
+(1..16).each {|a|
+  myStack.push(a)
+  if (myStack.length ==4)
+    puts myStack.join(",")
+    myStack=[]
+  end
+}
+```
+Now, do the same with each_slice in Enumerable.
+```ruby
+(1..16).each_slice(4) {|a| p a}
+[1, 2, 3, 4]
+[5, 6, 7, 8]
+[9, 10, 11, 12]
+[13, 14, 15, 16]
+=> nil
+```
+
+p is like puts, but it does not insert a line feed.
+p foo does puts foo.inspect, i.e. it prints the value of inspect instead of to_s, which is more suitable for debugging (because you can e.g. tell the difference between 1, "1" and "2\b1", which you can't when printing without inspect).                           
+
+-The Tree class was interesting, but it did not allow you to specify a new tree with a clean user interface. Let the initializer accept a nested structure with hashes and arrays. You should be able to specify a tree like this: {’grandpa’ => { ’dad’ => {’child 1’ => {}, ’child 2’ => {} }, ’uncle’ => {’child 3’ => {}, ’child 4’ => {} } } }.
+              
+                              
+-Write a simple grep that will print the lines of a file having any occurrences of a phrase anywhere in that line. You will need to do a simple regular expression match and read lines from a file. (This is surprisingly simple in Ruby.) If you want, include line numbers. 
