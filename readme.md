@@ -176,6 +176,102 @@ p is like puts, but it does not insert a line feed.
 p foo does puts foo.inspect, i.e. it prints the value of inspect instead of to_s, which is more suitable for debugging (because you can e.g. tell the difference between 1, "1" and "2\b1", which you can't when printing without inspect).                           
 
 -The Tree class was interesting, but it did not allow you to specify a new tree with a clean user interface. Let the initializer accept a nested structure with hashes and arrays. You should be able to specify a tree like this: {’grandpa’ => { ’dad’ => {’child 1’ => {}, ’child 2’ => {} }, ’uncle’ => {’child 3’ => {}, ’child 4’ => {} } } }.
-              
+
+```ruby
+class Tree
+    attr_accessor :child_nodes, :name
+  def initialize(treeData)
+    puts "tree size= #{treeData.size}"
+=begin
+    save current node value to @name
+=end  
+    @name=treeData.keys()[0]
+    puts "adding key-value pair #{@name}"
+=begin
+    create empty array to hold this name's children
+=end  
+
+    @child_nodes=[]
+=begin
+    go to each of this node's children and add it to the children array.
+    For each child create a new Tree object. This will call Tree.initialize
+    which will recursively descend the tree
+=end  
+    treeData[@name].each {|key,value|
+      @child_nodes.push(
+        Tree.new( key => value)
+      )
+
+    puts "#{@name} size= #{@child_nodes.size}"
+    }
+
+  end
+
+  def visit_all(&block)
+    visit &block
+    child_nodes.each {|c| c.visit_all &block}
+  end
+
+  def visit(&block) 
+    block.call self
+  end 
+end
+
+puts "*************************************************"
+puts "simple tree"
+simple_tree = Tree.new({"dad" => {"son" => {}}})
+
+puts "*************************************************"
+puts "complex tree"
+ruby_tree = Tree.new({
+ "grandpa" => {
+            "dad" => {
+                "child1" => {},
+                "child2" => {}
+            },
+            "uncle" => {
+                "child3" => {},
+                "child4" => {}
+            }
+        }
+
+  })
+
+puts 'visiting node'
+ruby_tree.visit {|node| puts node.name}
+
+puts 'visiting all nodes'
+ruby_tree.visit_all {|node| puts node.name}
+```
                               
 -Write a simple grep that will print the lines of a file having any occurrences of a phrase anywhere in that line. You will need to do a simple regular expression match and read lines from a file. (This is surprisingly simple in Ruby.) If you want, include line numbers. 
+NOTE - I did not need to use regex pattern matching.
+```ruby
+class Grep
+  attr_accessor :filename, :searchString
+  def initialize(filename, searchString)
+    @filename = filename
+    @searchString = searchString
+    search(searchString)
+  end
+
+  def search (searchString)
+    lineNumber=0
+    File.open(filename,"r") do |myFile|
+      while (line = myFile.gets)
+        #if line.include? searchString
+        regex='/'+searchString+'/'
+        if line =~ /line/
+          puts "line number #{lineNumber} - #{line}"
+        end
+        lineNumber = lineNumber + 1
+
+      end
+    end
+  end
+end
+
+
+myGrep = Grep.new 'myFile.txt','lin'
+
+```
