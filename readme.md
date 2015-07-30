@@ -79,7 +79,7 @@ while guessAgain
 
 end
 ```
-##Day 2
+## Day 2
 Find:
             
 -Find out how to access files with and without code blocks. What is the benefit of the code block? 
@@ -273,5 +273,34 @@ end
 
 
 myGrep = Grep.new 'myFile.txt','lin'
-
 ```
+
+## Unit Testing Framework
+Use Minitest
+refer to examples in unitTest folder
+To run a test...
+uby test_stack.rb
+Run options: --seed 3150
+
+#Running tests:
+
+...
+
+Finished tests in 0.000583s, 5145.7976 tests/s, 5145.7976 assertions/s.
+
+3 tests, 3 assertions, 0 failures, 0 errors, 0 skips
+dereks-MacBook-Pro:unitTest work$ vi test_stack.rb
+dereks-MacBook-Pro:unitTest work$ vi expectation_style.rb
+dereks-MacBook-Pro:unitTest work$ vi expectation_style.rb
+dereks-MacBook-Pro:unitTest work$ vi test_stack.rb
+dereks-MacBook-Pro:unitTest work$ ruby test_stack.rb
+Run options: --seed 64986
+
+#Running tests:
+
+........
+
+Finished tests in 0.001448s, 5524.8619 tests/s, 6906.0773 assertions/s.
+
+8 tests, 10 assertions, 0 failures, 0 errors, 0 skips
+
