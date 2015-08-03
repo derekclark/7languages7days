@@ -274,8 +274,111 @@ end
 
 myGrep = Grep.new 'myFile.txt','lin'
 ```
+## Day 3
+## Homework
+Modify the CSV application to support an each method to return a CsvRow object. Use method_missing on that CsvRow to return the value for the column for a given heading.
+For example, for the file:
+      one, two
+      lions, tigers
+allow an API that works like this:
+      csv = RubyCsv.new
+      csv.each {|row| puts row.one}
+This should print "lions".
 
-## Unit Testing Framework
+```ruby
+module ActsAsCsv
+  def self.included(base)
+    base.extend ClassMethods
+  end
+  
+  module ClassMethods
+    def acts_as_csv
+      include InstanceMethods
+    end
+  end
+  
+  module InstanceMethods   
+    attr_accessor :headers, :csv_contents
+
+    def read
+      @csv_contents = []
+      filename = self.class.to_s.downcase + '.csv'
+      @file = File.new(filename)
+      @headers = @file.gets.chomp.split(', ')
+      @file.each do |row|
+        @csv_contents << CsvRow.new(@headers, row.chomp.split(', '))
+      end
+    end
+    
+    def initialize
+      read 
+    end
+
+    def each
+      @csv_contents.each {|row| yield row}
+    end
+
+    class CsvRow
+      def initialize(headers, row)
+        @headers=headers
+        @row = row
+      end
+
+      def respond_to?(sym, include_private=false)
+        puts "checking if CsvRow responds to method #{sym.to_s}"
+        @headers.index(sym.to_s) || super(sym)
+      end
+
+      def method_missing name, *args, &block
+        sym=name.to_s
+        if self.respond_to?(sym)
+          col=@headers.index(sym)
+          @row[col]
+        else
+          puts "does not respond to method: #{sym}"
+        end
+      end
+    end
+
+
+  end
+end
+
+
+class RubyCsv  # no inheritance! You can mix it in
+  include ActsAsCsv
+  acts_as_csv
+end
+
+m = RubyCsv.new
+puts "check that each returns CsvRow"
+m.each {|row| puts row.inspect}
+puts
+puts "check that CsvRow responds to method two"
+m.each {|row| puts row.respond_to?("two")}
+puts
+puts "get column one"
+m.each {|row| puts row.one}
+puts
+puts "get column two"
+m.each {|row| puts row.two}
+puts
+puts "get non-existent column three. This will fail nicely because method_missing will first check that the object responds to the method."
+m.each {|row| puts row.three}
+
+```
+note: when specifying method_missing, it is advisable to specify respond_to? method first.
+
+The index method is pretty neat. It works on arrays like so...
+```ruby
+irb(main):009:0> a=["one","two"]
+=> ["one", "two"]
+irb(main):010:0> a.index("one")
+=> 0
+irb(main):011:0> a.index("two")
+=> 1
+```
+# Unit Testing Framework
 Use Minitest
 refer to examples in unitTest folder
 To run a test...
@@ -303,4 +406,3 @@ Run options: --seed 64986
 Finished tests in 0.001448s, 5524.8619 tests/s, 6906.0773 assertions/s.
 
 8 tests, 10 assertions, 0 failures, 0 errors, 0 skips
-
