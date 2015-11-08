@@ -1,8 +1,10 @@
 require 'minitest/autorun'
 require './stack'
+require './element'
 class TestStack < Minitest::Unit::TestCase
 	def setup
 		@stack = Stack.new
+		@element = Element.new
   	end
 
 	def test_empty_stack_has_zero_size
@@ -53,4 +55,25 @@ class TestStack < Minitest::Unit::TestCase
  	def add_to_stack(content)
 		@stack.add(content)
 	end
+
+	def test_setting_high_priority
+		@element.setPriority(1)
+		assert_equal "high",@element.getPriority()
+	end
+
+	def test_setting_medium_priority
+		@element.setPriority(11)
+		assert_equal "medium",@element.getPriority()
+	end
+
+	def test_setting_low_priority
+		@element.setPriority(91)
+		assert_equal "low",@element.getPriority()
+	end
+
+	def add_element_to_stack
+		add_to_stack(element)
+ 		assert_equal 1,@stack.size
+	end
+
 end
