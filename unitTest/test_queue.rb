@@ -80,9 +80,32 @@ class Testqueue < Minitest::Unit::TestCase
 		assert_equal @high_priority_test_message, @queue.remove
 	end
 
-	def test_messages_come_off_in_priority_sequence
+	def test_high_comes_before_low_messages
+		add_to_queue(@high_priority_test_message)
+		add_to_queue(@low_priority_test_message)
+		assert_equal @high_priority_test_message, @queue.remove
+	end
+
+	def test_high_comes_before_medium_messages
+		add_to_queue(@high_priority_test_message)
+		add_to_queue(@medium_priority_test_message)
+		assert_equal @high_priority_test_message, @queue.remove
+	end
+
+	def test_medium_comes_before_low_messages
 		add_to_queue(@low_priority_test_message)
 		add_to_queue(@medium_priority_test_message)
 		assert_equal @medium_priority_test_message, @queue.remove
 	end
+
+	def test_correct_sequencing_for_multiple_messages
+		add_to_queue(@medium_priority_test_message)
+		add_to_queue(@high_priority_test_message)
+		add_to_queue(@low_priority_test_message)
+		assert_equal @high_priority_test_message, @queue.remove
+		assert_equal @medium_priority_test_message, @queue.remove
+		assert_equal @low_priority_test_message, @queue.remove
+	end
+
+
 end
