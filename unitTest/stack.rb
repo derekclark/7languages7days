@@ -1,17 +1,14 @@
 class Stack
-	attr_accessor :size, :stack
+	attr_accessor :stack
 	def initialize
-		@size=0
  		@stack=[]
 	end
 
 	def add(content)
 		@stack.push(content)
-		@size=@size+1
 	end
 
     def remove
-		@size=@size-1
 		@stack.pop
 	end
 
@@ -19,4 +16,7 @@ class Stack
 		@stack[-1]
 	end
 
+	def size
+		@stack.size
+	end
 end
