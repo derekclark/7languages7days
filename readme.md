@@ -381,8 +381,11 @@ irb(main):011:0> a.index("two")
 # Unit Testing Framework
 Use Minitest
 refer to examples in unitTest folder
+
+NB. for Minitest to see a method as a test method, the method needs to be prefixed with test
+
 To run a test...
-uby test_stack.rb
+ruby test_stack.rb
 Run options: --seed 3150
 
 #Running tests:
